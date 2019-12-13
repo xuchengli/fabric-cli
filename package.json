@@ -1,0 +1,27 @@
+{
+  "name": "fabric-cli",
+  "version": "1.0.0",
+  "description": "创建企业级区块链的命令行工具",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuchengli/fabric-cli.git"
+  },
+  "author": "Li Xu Cheng (lixucheng@aliyun.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xuchengli/fabric-cli/issues"
+  },
+  "homepage": "https://github.com/xuchengli/fabric-cli#readme",
+  "devDependencies": {
+    "eslint": "^6.7.2"
+  },
+  "dependencies": {
+    "log-beautify": "^1.1.9",
+    "node-ssh": "^6.0.0"
+  }
+}
