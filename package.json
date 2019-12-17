@@ -21,6 +21,9 @@
     "eslint": "^6.7.2"
   },
   "dependencies": {
+    "chalk": "^3.0.0",
+    "figlet": "^1.2.4",
+    "inquirer": "^7.0.1",
     "log-beautify": "^1.1.9",
     "node-ssh": "^6.0.0"
   }
