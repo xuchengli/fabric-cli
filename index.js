@@ -1,6 +1,7 @@
 const log = require('log-beautify');
 const chalk = require('chalk');
 const figlet = require('figlet');
+const { createTopology } = require('./lib/create-topology');
 // const Server = require('./lib/server');
 // const { installDocker } = require('./lib/install-docker');
 
@@ -27,3 +28,9 @@ console.log(chalk.blueBright(figlet.textSync('Play with fabric blockchain', {
 // }).catch(err => {
 //   log.error(err);
 // });
+
+createTopology().then(result => {
+  log.success(result);
+}).catch(err => {
+  log.error(err);
+});
