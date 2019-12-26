@@ -25,6 +25,7 @@
     "figlet": "^1.2.4",
     "inquirer": "^7.0.1",
     "log-beautify": "^1.1.9",
-    "node-ssh": "^6.0.0"
+    "node-ssh": "^6.0.0",
+    "telnet-client": "^1.2.5"
   }
 }
