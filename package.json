@@ -26,6 +26,7 @@
     "inquirer": "^7.0.1",
     "log-beautify": "^1.1.9",
     "node-ssh": "^6.0.0",
-    "telnet-client": "^1.2.5"
+    "telnet-client": "^1.2.5",
+    "validate-ip": "^1.0.1"
   }
 }
