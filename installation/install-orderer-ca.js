@@ -51,12 +51,9 @@ async function installOrdererCA() {
   // 更新profile
   profile.hosts.push(orderer_org_ca_host);
   profile.docker.push(version);
-  Object.assign(profile, {
-    swarm_token: swarmToken,
-    orderer_org: {
-      ca: orderer_org_ca_host,
-    },
-  });
+  Object.assign(profile, { swarm_token: swarmToken });
+  Object.assign(profile.orderer_org, { ca: orderer_org_ca_host });
+
   return ca;
 }
 module.exports = { installOrdererCA };
