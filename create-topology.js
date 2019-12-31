@@ -11,7 +11,7 @@ async function createTopology() {
   profile.consensus = consensus_type;
 
   if (consensus_type === 'solo') {
-    return await installOrdererCA();
+    await installOrdererCA();
   }
   return profile;
 }

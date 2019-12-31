@@ -27,15 +27,36 @@ async function installOrdererCA() {
 
   // 安装docker
   const dockerVersion = await installDocker(server);
+  const { major, minor, patch } = parseVersion(dockerVersion);
+  const version = `${major}.${minor}.${patch}`;
   // 安装docker swarm leader
   const swarmToken = await installSwarmLeader(server);
-
+  // 安装，启动fabric ca
+  const caLoader = new Loader();
+  let ca;
+  try {
+    caLoader.process();
+    await server.createNetwork(profile.network);
+    ca = await server.startFabricCA('orderer-org-ca', profile.fabric_version, profile.network,
+      out => {
+        caLoader.writeBuffer(out);
+      },
+      err => {
+        caLoader.writeBuffer(err);
+      }
+    );
+  } finally {
+    caLoader.finish();
+  }
   // 更新profile
-  const { major, minor, patch } = parseVersion(dockerVersion);
   profile.hosts.push(orderer_org_ca_host);
-  profile.docker.push(`${major}.${minor}.${patch}`);
-  profile.swarm_token = swarmToken;
-
-  return profile;
+  profile.docker.push(version);
+  Object.assign(profile, {
+    swarm_token: swarmToken,
+    orderer_org: {
+      ca: orderer_org_ca_host,
+    },
+  });
+  return ca;
 }
 module.exports = { installOrdererCA };
