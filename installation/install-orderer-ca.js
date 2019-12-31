@@ -3,8 +3,10 @@ const inquirer = require('inquirer');
 const questions = require('../lib/questions');
 const Server = require('../lib/server');
 const Loader = require('../lib/loader');
+const profile = require('../lib/profile');
 const { parseVersion } = require('../lib/utils');
 const { installDocker } = require('./install-docker');
+const { installSwarmLeader } = require('./install-docker-swarm');
 
 async function installOrdererCA() {
   const ordererOrgCA = await inquirer.prompt(questions.orderer_org_ca);
@@ -23,11 +25,16 @@ async function installOrdererCA() {
     return await installOrdererCA();
   }
 
-  const profile = {};
   // 安装docker
   const dockerVersion = await installDocker(server);
+  // 安装docker swarm leader
+  const swarmToken = await installSwarmLeader(server);
+
+  // 更新profile
   const { major, minor, patch } = parseVersion(dockerVersion);
-  Object.assign(profile, { docker: `${major}.${minor}.${patch}` });
+  profile.hosts.push(orderer_org_ca_host);
+  profile.docker.push(`${major}.${minor}.${patch}`);
+  profile.swarm_token = swarmToken;
 
   return profile;
 }
