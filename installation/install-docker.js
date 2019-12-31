@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
-const questions = require('./questions');
-const Loader = require('./loader');
-const { parseVersion, listVersion, findVersion } = require('./utils');
+const questions = require('../lib/questions');
+const Loader = require('../lib/loader');
+const { parseVersion, listVersion, findVersion } = require('../lib/utils');
 
 async function installDocker(server, version) {
   const docker = await server.checkDocker();
