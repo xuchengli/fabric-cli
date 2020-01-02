@@ -56,4 +56,4 @@ async function installOrdererCA() {
 
   return ca;
 }
-module.exports = { installOrdererCA };
+module.exports = installOrdererCA;
