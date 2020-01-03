@@ -1,10 +1,9 @@
-const log = require('log-beautify');
 const inquirer = require('inquirer');
 const questions = require('../lib/questions');
 const Server = require('../lib/server');
 const Loader = require('../lib/loader');
 const profile = require('../lib/profile');
-const { parseVersion } = require('../lib/utils');
+const { parseVersion, logError } = require('../lib/utils');
 const { installDocker } = require('./install-docker');
 const { installSwarmLeader } = require('./install-docker-swarm');
 
@@ -21,7 +20,7 @@ async function installOrdererCA() {
     loader.finish();
   } catch (err) {
     loader.finish();
-    log.error(err.toString().split(':')[1].trim() + '，再试一下>>>>');
+    logError(err.toString().split(':')[1].trim() + '，再试一下>>>>');
     return await installOrdererCA();
   }
 

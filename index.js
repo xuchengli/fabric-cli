@@ -1,9 +1,7 @@
-const log = require('log-beautify');
 const chalk = require('chalk');
 const figlet = require('figlet');
 const { createTopology } = require('./create-topology');
-
-log.useLabels = true;
+const { logSuccess, logError } = require('./lib/utils');
 
 console.log(chalk.blueBright(figlet.textSync('Play with fabric blockchain', {
   font: 'ANSI Shadow',
@@ -11,7 +9,7 @@ console.log(chalk.blueBright(figlet.textSync('Play with fabric blockchain', {
 })));
 
 createTopology().then(result => {
-  log.success(result);
+  logSuccess(result);
 }).catch(err => {
-  log.error(err);
+  logError(err);
 });
