@@ -3,18 +3,18 @@ const questions = require('../lib/questions');
 const Loader = require('../lib/loader');
 const { parseVersion, listVersion, findVersion } = require('../lib/utils');
 
-async function installDocker(server, version) {
+async function installDocker(server, version, questionOffset = 0) {
   const docker = await server.checkDocker();
   if (docker.includes('command not found')) {
-    return await installFromBareMetal(server, version);
+    return await installFromBareMetal(server, version, questionOffset);
   } else {
-    return await updateDocker(server, docker, version);
+    return await updateDocker(server, docker, version, questionOffset);
   }
 }
-async function installFromBareMetal(server, version) {
+async function installFromBareMetal(server, version, questionOffset) {
   let availableVersionList = [];
   // 选择系统架构
-  const archAnswer = await inquirer.prompt(questions.select_sys_arch);
+  const archAnswer = await inquirer.prompt(questions.server_arch(questionOffset));
   const loader = new Loader();
   try {
     loader.process();
@@ -49,7 +49,7 @@ async function installFromBareMetal(server, version) {
     loader.finish();
   }
   // 需要手动选择具体安装的版本
-  const versionAnswer = await inquirer.prompt(questions.select_docker_version(availableVersionList));
+  const versionAnswer = await inquirer.prompt(questions.docker_version(availableVersionList, '', questionOffset));
   const installationLoader = new Loader();
   try {
     installationLoader.process();
@@ -63,7 +63,7 @@ async function installFromBareMetal(server, version) {
     installationLoader.finish();
   }
 }
-async function updateDocker(server, originalVersion, updateVersion) {
+async function updateDocker(server, originalVersion, updateVersion, questionOffset) {
   const parsedOriginalVersion = parseVersion(originalVersion);
   const major = parseInt(parsedOriginalVersion.major);
   const minor = parseInt(parsedOriginalVersion.minor);
@@ -78,7 +78,7 @@ async function updateDocker(server, originalVersion, updateVersion) {
     return originalVersion;
   }
   // 确认是否需要更新docker版本
-  const dockerUpdateAnswer = await inquirer.prompt(questions.confirm_docker_update);
+  const dockerUpdateAnswer = await inquirer.prompt(questions.confirm_docker_update(questionOffset));
   if (dockerUpdateAnswer.toBeUpdated) {
     // 重新安装docker版本，首先删除老版本
     const loader = new Loader();
