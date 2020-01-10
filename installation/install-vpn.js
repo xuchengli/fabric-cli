@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const questions = require('../lib/questions');
 const Server = require('../lib/server');
 const Loader = require('../lib/loader');
-const { logSuccess, logError, logSubtitle } = require('../lib/utils');
+const profile = require('../lib/profile');
+const { logSuccess, logError, logSubtitle, formatVPNLoginInfo } = require('../lib/utils');
 const { installDocker } = require('./install-docker');
 
 async function installVPN() {
@@ -50,8 +51,12 @@ async function installVPN() {
   logSuccess('安装IPsec VPN服务', 7);
 
   // 获取VPN服务器的PSK预共享密钥, VPN用户名, VPN密码
-  const loginInfo = await server.fetchVPNLoginInfo('ipsec-vpn-server');
+  const loginInfo = formatVPNLoginInfo(await server.fetchVPNLoginInfo('ipsec-vpn-server'));
+  const { VPN_IPSEC_PSK: psk, VPN_USER: user, VPN_PASSWORD: pass } = loginInfo;
 
-  return loginInfo;
+  // 更新profile
+  Object.assign(profile.vpn, { host, psk, user, password: pass });
+
+  return profile;
 }
 module.exports = installVPN;

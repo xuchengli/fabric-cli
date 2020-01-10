@@ -9,15 +9,22 @@ console.log(chalk.blueBright(figlet.textSync('Play with fabric blockchain', {
   horizontalLayout: 'fitted'
 })));
 
-logTitle('创建VPN');
+(async () => {
+  try {
+    logTitle('创建VPN');
 
-installVPN().then(result => {
-  logSuccess(result);
-}).catch(err => {
-  logError(err);
-});
-// createTopology().then(result => {
-//   logSuccess(result);
-// }).catch(err => {
-//   logError(err);
-// });
+    const result = await installVPN();
+    logSuccess(JSON.stringify(result, null, 2));
+
+    console.log('\n');
+    logTitle('创建区块链网络');
+
+    // createTopology().then(result => {
+    //   logSuccess(result);
+    // }).catch(err => {
+    //   logError(err);
+    // });
+  } catch (err) {
+    logError(err);
+  }
+})();
