@@ -7,6 +7,35 @@ const { parseVersion, logSuccess, logWarning, logError, logSubtitle } = require(
 const { installDocker } = require('./install-docker');
 // const { installSwarmLeader, telnetSwarmLeader, joinSwarm } = require('./install-docker-swarm');
 
+async function confirmVPNServerPort(server) {
+  const vpnServerPort = await inquirer.prompt(questions.confirm_vpn_server_port(profile.vpn.host, 10));
+  if (vpnServerPort.toBeOpened) {
+    const loader = new Loader();
+    try {
+      loader.process('正在连接中....');
+      await server.disconnectFromVPN();
+      loader.finish();
+    } catch (err) {
+      loader.finish();
+      logError(err.toString(), 12);
+    }
+    await connectToVPN(server);
+  } else {
+    await confirmVPNServerPort(server);
+  }
+}
+async function connectToVPN(server) {
+  const loader = new Loader();
+  try {
+    loader.process('正在连接中....');
+    await server.connectToVPN(profile.vpn.host);
+    loader.finish();
+  } catch (err) {
+    loader.finish();
+    logError(err.toString(), 12);
+    await confirmVPNServerPort(server);
+  }
+}
 async function installPeerOrgCA(number = 1) {
   const peerOrgCA = await inquirer.prompt(questions.peer_org_ca(number, 5));
   const { host, username, password } = peerOrgCA;
@@ -56,6 +85,10 @@ async function installPeerOrgCA(number = 1) {
       return await installPeerOrgCA(number);
     }
     logSuccess('配置VPN客户端', 12);
+
+    logSubtitle('连接VPN服务器', 12);
+    await connectToVPN(server);
+    logSuccess('连接VPN服务器', 12);
 
     // 更新profile
     profile.hosts.push(host);
