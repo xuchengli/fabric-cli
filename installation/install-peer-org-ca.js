@@ -81,7 +81,7 @@ async function installPeerOrgCA(number = 1) {
       vpnLoader.finish();
     } catch (err) {
       vpnLoader.finish();
-      logError(err.toString().split(':')[1].trim() + '，再试一下>>>>', 12);
+      logError(err.toString() + '，再试一下>>>>', 12);
       return await installPeerOrgCA(number);
     }
     logSuccess('配置VPN客户端', 12);
