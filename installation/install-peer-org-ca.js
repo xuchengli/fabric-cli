@@ -95,9 +95,13 @@ async function installPeerOrgCA(number = 1) {
     await connectToVPN(server);
     logSuccess('连接VPN服务器', 12);
 
+    // 获取vpn客户端地址
+    const vpnClient = await server.fetchVPNClientIP();
+
     // 更新profile
     profile.hosts.push(host);
     profile.docker.push(version);
+    profile.vpn.clients.push(vpnClient);
   }
 
   // 如果服务器没有安装docker和swarm，进行安装
