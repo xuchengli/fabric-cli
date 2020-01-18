@@ -28,7 +28,12 @@ async function connectToVPN(server) {
   const loader = new Loader();
   try {
     loader.process('正在连接中....');
-    await server.connectToVPN(profile.vpn.host);
+    await Promise.race([
+      server.connectToVPN(profile.vpn.host),
+      new Promise((resolve, reject) => {
+        setTimeout(() => reject(new Error('连接超时！')), 20000);
+      }),
+    ]);
     loader.finish();
   } catch (err) {
     loader.finish();

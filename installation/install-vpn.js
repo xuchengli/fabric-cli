@@ -45,7 +45,7 @@ async function installVPN() {
     vpnLoader.finish();
   } catch (err) {
     vpnLoader.finish();
-    logError(err.toString().split(':')[1].trim() + '，再试一下>>>>', 7);
+    logError(err.toString() + '，再试一下>>>>', 7);
     return await installVPN();
   }
   logSuccess('安装IPsec VPN服务', 7);
